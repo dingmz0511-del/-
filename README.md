@@ -40,3 +40,6 @@ python -m uvicorn app.main:app --app-dir backend --reload
 
 ## 安全
 禁止提交 `.env`、数据库文件、GitHub Token、模型 API Key 或客户真实数据。
+
+## 独立视频下载工具（yt-dlp）
+已添加独立的 [yt-dlp 视频下载工具](tools/video-downloader/README.md)，可通过 [GitHub Actions](https://github.com/dingmz0511-del/-/actions/workflows/video-download.yml) 手动安装并下载支持的公开视频，无需运行 StoreMind AI 后端。
