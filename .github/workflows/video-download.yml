@@ -1,6 +1,10 @@
 name: Download video with yt-dlp
 
 on:
+  push:
+    paths:
+      - '.github/workflows/video-download.yml'
+      - 'tools/video-downloader/**'
   workflow_dispatch:
     inputs:
       video_url:
