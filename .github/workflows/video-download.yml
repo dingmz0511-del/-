@@ -1,0 +1,44 @@
+name: Download video with yt-dlp
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: "Public video URL (leave blank to verify installation only)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  yt-dlp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install yt-dlp
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r tools/video-downloader/requirements.txt
+          python -m yt_dlp --version
+      - name: Check FFmpeg
+        run: ffmpeg -version
+      - name: Download public video
+        if: ${{ inputs.video_url != '' }}
+        env:
+          VIDEO_URL: ${{ inputs.video_url }}
+        run: python tools/video-downloader/download.py "$VIDEO_URL"
+      - name: Upload video artifact
+        if: ${{ inputs.video_url != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: downloaded-video
+          path: downloads/
+          if-no-files-found: error
+          retention-days: 3
